@@ -6,6 +6,7 @@ import (
 )
 
 var drivers = map[string]func() driver{
+	"bcachefs":   func() driver { return &bcachefs{} },
 	"btrfs":      func() driver { return &btrfs{} },
 	"ceph":       func() driver { return &ceph{} },
 	"cephfs":     func() driver { return &cephfs{} },
