@@ -289,6 +289,7 @@ run_standalone_storage() {
     run_test test_storage_bucket_export "storage buckets export and import"
     run_test test_storage_buckets "storage buckets"
     run_test test_storage_buckets_drivers "storage buckets on all local drivers"
+    run_test test_storage_driver_bcachefs "bcachefs storage driver"
     run_test test_storage_driver_btrfs "btrfs storage driver"
     run_test test_storage_driver_ceph "ceph storage driver"
     run_test test_storage_driver_ceph_librbd "ceph storage driver (librbd)"

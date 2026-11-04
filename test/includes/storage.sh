@@ -34,7 +34,7 @@ available_storage_backends() {
 
     backends="dir" # always available
 
-    storage_backends="btrfs lvm zfs"
+    storage_backends="bcachefs btrfs lvm zfs"
     if [ -n "${INCUS_CEPH_CLUSTER:-}" ]; then
         storage_backends="${storage_backends} ceph"
     fi
