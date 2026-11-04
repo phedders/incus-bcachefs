@@ -3619,3 +3619,7 @@ This adds a new `variant` configuration key to both `sriov` networks and NICs, a
 This adds support for PCIe resizable BARs to the `pci` and `gpu` (physical) devices of virtual machines.
 
 The new `rebar.<N>.size` configuration keys set the size of BAR `N` on the host before the device is passed to the VM, with the original size restored when the instance stops.
+
+## `storage_driver_bcachefs`
+
+This adds a bcachefs storage driver.
