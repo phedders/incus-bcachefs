@@ -6422,6 +6422,59 @@ Note that the claim must be contained in the access token or, for opaque access 
 ```
 
 <!-- config group server-oidc end -->
+<!-- config group storage_bcachefs-common start -->
+```{config:option} bcachefs.create_options storage_bcachefs-common
+:default: "-"
+:scope: "global"
+:shortdesc: "Additional options to pass to `mkfs.bcachefs` when creating the pool"
+:type: "string"
+
+```
+
+```{config:option} bcachefs.mount_options storage_bcachefs-common
+:default: "-"
+:scope: "global"
+:shortdesc: "Mount options for block devices"
+:type: "string"
+
+```
+
+```{config:option} bcachefs.optimized_images storage_bcachefs-common
+:default: "`true`"
+:scope: "global"
+:shortdesc: "Cache images as volumes and create instances from them using COW copies"
+:type: "bool"
+A bcachefs COW copy of a volume shares its project quota, so setting this to `false`
+unpacks images into each new instance volume instead, which is slower but lets instance
+`size` limits be enforced. An instance whose volume config differs from the pool's
+defaults (for example one that sets `size`) is never created from a cached image.
+```
+
+```{config:option} size storage_bcachefs-common
+:default: "auto (20% of free disk space, >= 5 GiB and <= 30 GiB)"
+:scope: "local"
+:shortdesc: "Size of the storage pool when creating loop-based pools (in bytes, suffixes supported, can be increased to grow storage pool)"
+:type: "string"
+
+```
+
+```{config:option} source storage_bcachefs-common
+:default: "-"
+:scope: "local"
+:shortdesc: "Path to an existing block device, loop file, directory or bcachefs file system to use for the pool"
+:type: "string"
+
+```
+
+```{config:option} source.wipe storage_bcachefs-common
+:default: "`false`"
+:scope: "local"
+:shortdesc: "Wipe the block device specified in `source` prior to creating the storage pool"
+:type: "bool"
+
+```
+
+<!-- config group storage_bcachefs-common end -->
 <!-- config group storage_btrfs-common start -->
 ```{config:option} btrfs.create_options storage_btrfs-common
 :default: "-"
@@ -7005,6 +7058,96 @@ has completed.
 ```
 
 <!-- config group storage_truenas-common end -->
+<!-- config group storage_volume_bcachefs-common start -->
+```{config:option} initial.gid storage_volume_bcachefs-common
+:condition: "custom volume with content type `filesystem`"
+:default: "same as `volume.initial.gid` or `0`"
+:shortdesc: "GID of the volume owner in the instance"
+:type: "int"
+
+```
+
+```{config:option} initial.mode storage_volume_bcachefs-common
+:condition: "custom volume with content type `filesystem`"
+:default: "same as `volume.initial.mode` or `711`"
+:shortdesc: "Mode of the volume in the instance"
+:type: "int"
+
+```
+
+```{config:option} initial.uid storage_volume_bcachefs-common
+:condition: "custom volume with content type `filesystem`"
+:default: "same as `volume.initial.uid` or `0`"
+:shortdesc: "UID of the volume owner in the instance"
+:type: "int"
+
+```
+
+```{config:option} security.shared storage_volume_bcachefs-common
+:condition: "custom block volume"
+:default: "same as `volume.security.shared` or `false`"
+:shortdesc: "Enable sharing the volume across multiple instances"
+:type: "bool"
+
+```
+
+```{config:option} security.shifted storage_volume_bcachefs-common
+:condition: "custom volume"
+:default: "same as `volume.security.shifted` or `false`"
+:shortdesc: "{{enable_ID_shifting}}"
+:type: "bool"
+
+```
+
+```{config:option} security.unmapped storage_volume_bcachefs-common
+:condition: "custom volume"
+:default: "same as `volume.security.unmapped` or `false`"
+:shortdesc: "Disable ID mapping for the volume"
+:type: "bool"
+
+```
+
+```{config:option} size storage_volume_bcachefs-common
+:condition: "appropriate driver"
+:default: "same as `volume.size`"
+:shortdesc: "Size/quota of the storage volume"
+:type: "string"
+
+```
+
+```{config:option} snapshots.expiry storage_volume_bcachefs-common
+:condition: "custom volume"
+:default: "same as `volume.snapshot.expiry`"
+:shortdesc: "{{snapshot_expiry_format}}"
+:type: "string"
+{{snapshot_expiry_detail}}
+```
+
+```{config:option} snapshots.expiry.manual storage_volume_bcachefs-common
+:condition: "custom volume"
+:default: "same as `volume.snapshot.expiry.manual`"
+:shortdesc: "{{snapshot_expiry_format}}"
+:type: "string"
+{{snapshot_expiry_detail}}
+```
+
+```{config:option} snapshots.pattern storage_volume_bcachefs-common
+:condition: "custom volume"
+:default: "same as `volume.snapshot.pattern` or `snap%d`"
+:shortdesc: "{{snapshot_pattern_format}} [^*]"
+:type: "string"
+
+```
+
+```{config:option} snapshots.schedule storage_volume_bcachefs-common
+:condition: "custom volume"
+:default: "same as `volume.snapshot.schedule`"
+:shortdesc: "{{snapshot_schedule_format}}"
+:type: "string"
+
+```
+
+<!-- config group storage_volume_bcachefs-common end -->
 <!-- config group storage_volume_btrfs-common start -->
 ```{config:option} btrfs.compression storage_volume_btrfs-common
 :condition: "appropriate driver"

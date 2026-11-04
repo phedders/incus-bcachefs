@@ -18,6 +18,7 @@ The following storage drivers are supported:
 
 - [Directory - `dir`](storage-dir)
 - [Btrfs - `btrfs`](storage-btrfs)
+- [bcachefs - `bcachefs`](storage-bcachefs)
 - [LVM - `lvm`](storage-lvm)
 - [LVM Cluster - `lvmcluster`](storage-lvmcluster)
 - [ZFS - `zfs`](storage-zfs)
@@ -38,25 +39,25 @@ See the following how-to guides for additional information:
 Where the Incus data is stored depends on the configuration and the selected storage driver.
 Depending on the storage driver that is used, Incus can either share the file system with its host or keep its data separate.
 
-| Storage location         | Directory | Btrfs    | LVM (all) | ZFS      | Ceph (all) | LINSTOR  | TrueNAS  |
-| :---                     | :---      | :---     | :---      | :---     | :---       | :---     | :---     |
-| Shared with the host     | &#x2713;  | &#x2713; | -         | &#x2713; | -          | -        | -        |
-| Dedicated disk/partition | -         | &#x2713; | &#x2713;  | &#x2713; | -          | &#x2713; | -        |
-| Loop disk                | -         | &#x2713; | &#x2713;  | &#x2713; | -          | &#x2713; | -        |
-| Remote storage           | -         | -        | &#x2713;  | -        | &#x2713;   | &#x2713; | &#x2713; |
+| Storage location         | Directory | Btrfs    | Bcachefs | LVM (all) | ZFS      | Ceph (all) | LINSTOR  | TrueNAS  |
+| :---                     | :---      | :---     | :---     | :---      | :---     | :---       | :---     | :---     |
+| Shared with the host     | &#x2713;  | &#x2713; | &#x2713; | -         | &#x2713; | -          | -        | -        |
+| Dedicated disk/partition | -         | &#x2713; | &#x2713; | &#x2713;  | &#x2713; | -          | &#x2713; | -        |
+| Loop disk                | -         | &#x2713; | &#x2713; | &#x2713;  | &#x2713; | -          | &#x2713; | -        |
+| Remote storage           | -         | -        | -        | &#x2713;  | -        | &#x2713;   | &#x2713; | &#x2713; |
 
 #### Shared with the host
 
 Sharing the file system with the host is usually the most space-efficient way to run Incus.
 In most cases, it is also the easiest to manage.
 
-This option is supported for the `dir` driver, the `btrfs` driver (if the host is Btrfs and you point Incus to a dedicated sub-volume) and the `zfs` driver (if the host is ZFS and you point Incus to a dedicated dataset on your zpool).
+This option is supported for the `dir` driver, the `btrfs` driver (if the host is Btrfs and you point Incus to a dedicated sub-volume), the `bcachefs` driver (if the host is bcachefs and you point Incus to a dedicated subvolume) and the `zfs` driver (if the host is ZFS and you point Incus to a dedicated dataset on your zpool).
 
 #### Dedicated disk or partition
 
 Having Incus use an empty partition on your main disk or a full dedicated disk keeps its storage completely independent from the host.
 
-This option is supported for the `btrfs` driver, the `lvm` driver, the `zfs` driver and the `linstor` driver.
+This option is supported for the `btrfs` driver, the `bcachefs` driver, the `lvm` driver, the `zfs` driver and the `linstor` driver.
 
 #### Loop disk
 
@@ -69,7 +70,7 @@ The loop files reside in `/var/lib/incus/disks/`.
 Every write must go through the storage driver and your main drive's
 file system, which leads to decreased performance.
 
-When the host file system is also copy-on-write (`btrfs` or `zfs`),
+When the host file system is also copy-on-write (`btrfs`, `bcachefs` or `zfs`),
 every commit inside the loop file has to be committed again by the host
 file system, so synchronous write workloads can issue several times the
 physical writes they would on a dedicated disk or partition. On SSDs,

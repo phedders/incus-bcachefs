@@ -8,6 +8,7 @@ Incus supports the following storage drivers for storing images, instances and c
 
 storage_dir
 storage_btrfs
+storage_bcachefs
 storage_lvm
 storage_zfs
 storage_ceph
@@ -24,21 +25,21 @@ See the corresponding pages for driver-specific information and configuration op
 
 Where possible, Incus uses the advanced features of each storage system to optimize operations.
 
-| Feature                                   | Directory | Btrfs | LVM   | ZFS     | Ceph RBD | CephFS | Ceph Object | LINSTOR | TRUENAS |
-| :---                                      | :---      | :---  | :---  | :---    | :---     | :---   | :---        | :---    | :---    |
-| {ref}`storage-optimized-image-storage`    | no        | yes   | yes   | yes     | yes      | n/a    | n/a         | yes     | yes     |
-| Optimized instance creation               | no        | yes   | yes   | yes     | yes      | n/a    | n/a         | yes     | yes     |
-| Optimized snapshot creation               | no        | yes   | yes   | yes     | yes      | yes    | n/a         | yes     | yes     |
-| Optimized image transfer                  | no        | yes   | no    | yes     | yes      | n/a    | n/a         | no      | no      |
-| {ref}`storage-optimized-volume-transfer`  | no        | yes   | no    | yes     | yes      | n/a    | n/a         | no      | no      |
-| Copy on write                             | no        | yes   | yes   | yes     | yes      | yes    | n/a         | yes     | yes     |
-| Block based                               | no        | no    | yes   | no      | yes      | no     | n/a         | yes     | yes     |
-| Instant cloning                           | no        | yes   | yes   | yes     | yes      | yes    | n/a         | yes     | yes     |
-| Storage driver usable inside a container  | yes       | yes   | no    | yes[^1] | no       | n/a    | n/a         | no      | no      |
-| Restore from older snapshots (not latest) | yes       | yes   | yes   | no      | yes      | yes    | n/a         | no      | no      |
-| Storage quotas                            | yes[^2]   | yes   | yes   | yes     | yes      | yes    | yes         | yes     | yes     |
-| Available on `incus admin init`           | yes       | yes   | yes   | yes     | yes      | no     | no          | no      | no      |
-| Object storage                            | yes       | yes   | yes   | yes     | no       | no     | yes         | no      | no      |
+| Feature                                   | Directory | Btrfs | Bcachefs | LVM   | ZFS     | Ceph RBD | CephFS | Ceph Object | LINSTOR | TRUENAS |
+| :---                                      | :---      | :---  | :---     | :---  | :---    | :---     | :---   | :---        | :---    | :---    |
+| {ref}`storage-optimized-image-storage`    | no        | yes   | yes      | yes   | yes     | yes      | n/a    | n/a         | yes     | yes     |
+| Optimized instance creation               | no        | yes   | yes      | yes   | yes     | yes      | n/a    | n/a         | yes     | yes     |
+| Optimized snapshot creation               | no        | yes   | yes      | yes   | yes     | yes      | yes    | n/a         | yes     | yes     |
+| Optimized image transfer                  | no        | yes   | no       | no    | yes     | yes      | n/a    | n/a         | no      | no      |
+| {ref}`storage-optimized-volume-transfer`  | no        | yes   | no       | no    | yes     | yes      | n/a    | n/a         | no      | no      |
+| Copy on write                             | no        | yes   | yes      | yes   | yes     | yes      | yes    | n/a         | yes     | yes     |
+| Block based                               | no        | no    | no       | yes   | no      | yes      | no     | n/a         | yes     | yes     |
+| Instant cloning                           | no        | yes   | yes      | yes   | yes     | yes      | yes    | n/a         | yes     | yes     |
+| Storage driver usable inside a container  | yes       | yes   | no       | no    | yes[^1] | no       | n/a    | n/a         | no      | no      |
+| Restore from older snapshots (not latest) | yes       | yes   | yes      | yes   | no      | yes      | yes    | n/a         | no      | no      |
+| Storage quotas                            | yes[^2]   | yes   | yes      | yes   | yes     | yes      | yes    | yes         | yes     | yes     |
+| Available on `incus admin init`           | yes       | yes   | yes      | yes   | yes     | yes      | no     | no          | no      | no      |
+| Object storage                            | yes       | yes   | no       | yes   | yes     | no       | no     | yes         | no      | no      |
 
 [^1]: Requires [`zfs.delegate`](storage-zfs-vol-config) to be enabled.
 [^2]: % Include content from [storage_dir.md](storage_dir.md)
@@ -61,6 +62,7 @@ Therefore, the first instance takes longer to create than subsequent ones.
 ### Optimized volume transfer
 
 Btrfs, ZFS and Ceph RBD have an internal send/receive mechanism that allows for optimized volume transfer.
+bcachefs has no equivalent mechanism, so transfers involving bcachefs pools always use the generic paths described below.
 
 Incus uses this optimized transfer when transferring instances and snapshots between storage pools that use the same storage driver, if the storage driver supports optimized transfer and the optimized transfer is actually quicker.
 Otherwise, Incus uses `rsync` to transfer container and file system volumes, or raw block transfer to transfer virtual machine and custom block volumes.

@@ -379,6 +379,7 @@ There are a few storage drivers for Incus besides the default `dir` driver.
 Installing these tools adds a bit to initramfs and may slow down your
 host boot, but are needed if you'd like to use a particular driver:
 
+    sudo apt install bcachefs-tools
     sudo apt install btrfs-progs
     sudo apt install ceph-common
     sudo apt install lvm2 thin-provisioning-tools

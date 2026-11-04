@@ -7174,6 +7174,66 @@
 				]
 			}
 		},
+		"storage_bcachefs": {
+			"common": {
+				"keys": [
+					{
+						"bcachefs.create_options": {
+							"default": "-",
+							"longdesc": "",
+							"scope": "global",
+							"shortdesc": "Additional options to pass to `mkfs.bcachefs` when creating the pool",
+							"type": "string"
+						}
+					},
+					{
+						"bcachefs.mount_options": {
+							"default": "-",
+							"longdesc": "",
+							"scope": "global",
+							"shortdesc": "Mount options for block devices",
+							"type": "string"
+						}
+					},
+					{
+						"bcachefs.optimized_images": {
+							"default": "`true`",
+							"longdesc": "A bcachefs COW copy of a volume shares its project quota, so setting this to `false`\nunpacks images into each new instance volume instead, which is slower but lets instance\n`size` limits be enforced. An instance whose volume config differs from the pool's\ndefaults (for example one that sets `size`) is never created from a cached image.",
+							"scope": "global",
+							"shortdesc": "Cache images as volumes and create instances from them using COW copies",
+							"type": "bool"
+						}
+					},
+					{
+						"size": {
+							"default": "auto (20% of free disk space, \u003e= 5 GiB and \u003c= 30 GiB)",
+							"longdesc": "",
+							"scope": "local",
+							"shortdesc": "Size of the storage pool when creating loop-based pools (in bytes, suffixes supported, can be increased to grow storage pool)",
+							"type": "string"
+						}
+					},
+					{
+						"source": {
+							"default": "-",
+							"longdesc": "",
+							"scope": "local",
+							"shortdesc": "Path to an existing block device, loop file, directory or bcachefs file system to use for the pool",
+							"type": "string"
+						}
+					},
+					{
+						"source.wipe": {
+							"default": "`false`",
+							"longdesc": "",
+							"scope": "local",
+							"shortdesc": "Wipe the block device specified in `source` prior to creating the storage pool",
+							"type": "bool"
+						}
+					}
+				]
+			}
+		},
 		"storage_btrfs": {
 			"common": {
 				"keys": [
@@ -7867,6 +7927,111 @@
 							"longdesc": "",
 							"scope": "global",
 							"shortdesc": "iSCSI portal address to use for block volume connections.",
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"storage_volume_bcachefs": {
+			"common": {
+				"keys": [
+					{
+						"initial.gid": {
+							"condition": "custom volume with content type `filesystem`",
+							"default": "same as `volume.initial.gid` or `0`",
+							"longdesc": "",
+							"shortdesc": "GID of the volume owner in the instance",
+							"type": "int"
+						}
+					},
+					{
+						"initial.mode": {
+							"condition": "custom volume with content type `filesystem`",
+							"default": "same as `volume.initial.mode` or `711`",
+							"longdesc": "",
+							"shortdesc": "Mode of the volume in the instance",
+							"type": "int"
+						}
+					},
+					{
+						"initial.uid": {
+							"condition": "custom volume with content type `filesystem`",
+							"default": "same as `volume.initial.uid` or `0`",
+							"longdesc": "",
+							"shortdesc": "UID of the volume owner in the instance",
+							"type": "int"
+						}
+					},
+					{
+						"security.shared": {
+							"condition": "custom block volume",
+							"default": "same as `volume.security.shared` or `false`",
+							"longdesc": "",
+							"shortdesc": "Enable sharing the volume across multiple instances",
+							"type": "bool"
+						}
+					},
+					{
+						"security.shifted": {
+							"condition": "custom volume",
+							"default": "same as `volume.security.shifted` or `false`",
+							"longdesc": "",
+							"shortdesc": "{{enable_ID_shifting}}",
+							"type": "bool"
+						}
+					},
+					{
+						"security.unmapped": {
+							"condition": "custom volume",
+							"default": "same as `volume.security.unmapped` or `false`",
+							"longdesc": "",
+							"shortdesc": "Disable ID mapping for the volume",
+							"type": "bool"
+						}
+					},
+					{
+						"size": {
+							"condition": "appropriate driver",
+							"default": "same as `volume.size`",
+							"longdesc": "",
+							"shortdesc": "Size/quota of the storage volume",
+							"type": "string"
+						}
+					},
+					{
+						"snapshots.expiry": {
+							"condition": "custom volume",
+							"default": "same as `volume.snapshot.expiry`",
+							"longdesc": "{{snapshot_expiry_detail}}",
+							"shortdesc": "{{snapshot_expiry_format}}",
+							"type": "string"
+						}
+					},
+					{
+						"snapshots.expiry.manual": {
+							"condition": "custom volume",
+							"default": "same as `volume.snapshot.expiry.manual`",
+							"longdesc": "{{snapshot_expiry_detail}}",
+							"shortdesc": "{{snapshot_expiry_format}}",
+							"type": "string"
+						}
+					},
+					{
+						"snapshots.pattern": {
+							"condition": "custom volume",
+							"default": "same as `volume.snapshot.pattern` or `snap%d`",
+							"longdesc": "",
+							"shortdesc": "{{snapshot_pattern_format}} [^*]",
+							"type": "string"
+						}
+					},
+					{
+						"snapshots.schedule": {
+							"condition": "custom volume",
+							"default": "same as `volume.snapshot.schedule`",
+							"longdesc": "",
+							"shortdesc": "{{snapshot_schedule_format}}",
 							"type": "string"
 						}
 					}
